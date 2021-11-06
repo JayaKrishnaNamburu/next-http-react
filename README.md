@@ -1,16 +1,14 @@
-This is a sample application that used next + webpack's buildHttp hook and loads esm modules.
-
-There are three different scenarios in the example
+This is a sample application that uses next + webpack's buildHttp hook and loads esm modules.
 
 - Loading a esm-module with css-modules.
 
 Most of the esm-modules extract out the css and serve using `unpkg` like antd. But we would like to bundle css too.
-So, the css is bundled as css-modules. And these are injected using `iife` into the `DOM`.
+CSS is bundled as css-modules. And these are injected using `iife` into the `DOM`.
 
-And since, NextJS don't have DOM for SSR in the server. We need to turn off `SSR` for the component and need to loaded it as 
+Since, NextJS don't have DOM for SSR in the server. We need to turn off `SSR` for the component and need to loaded it as 
 dynamic component.
 
-This beats, the SSR advantge but can be used in other cases where SSR is not priority. And no runtime need to be installed for just css.
+This beats the SSR advantge, but can be used in other cases where SSR is not priority. And no runtime need to be installed for just css.
 Like styled-components, styled-system etc.
 
 ```jsx
