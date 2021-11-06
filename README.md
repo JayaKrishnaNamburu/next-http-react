@@ -32,7 +32,7 @@ import CardWithStyledComponents from 'https://jscdn.teleporthq.io/product-card_0
 Styled Comonents don't need `DOM` unlike `css-modules`. And so, this should work without disabling `SSR`.
 But, NextJS and webpack throws a error. Which we can see from screenshot below.
 
-![image]('./error.png')
+<img src="https://raw.githubusercontent.com/JayaKrishnaNamburu/next-http-react/main/error.png" alt="error screen" />
 
 ```
 Server Error
