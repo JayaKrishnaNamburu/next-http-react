@@ -1,34 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a sample application that used next + webpack's buildHttp hook and loads esm modules.
 
-## Getting Started
+There are three different scenarios in the example
 
-First, run the development server:
+- Loading a esm-module with css-modules.
 
-```bash
-npm run dev
-# or
-yarn dev
+Most of the esm-modules extract out the css and serve using `unpkg` like antd. But we would like to bundle css too.
+So, the css is bundled as css-modules. And these are injected using `iife` into the `DOM`.
+
+And since, NextJS don't have DOM for SSR in the server. We need to turn off `SSR` for the component and need to loaded it as 
+dynamic component.
+
+This beats, the SSR advantge but can be used in other cases where SSR is not priority. And no runtime need to be installed for just css.
+Like styled-components, styled-system etc.
+
+```jsx
+const CardWithCSSModules = dynamic(() => 
+  import('https://jscdn.teleporthq.io/product-card_6b939cf1-0df0-4bc5-997e-93c149109fc4.js'), 
+{ ssr: false })
+
+// Usage
+
+<CardWithCSSModules />
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Loading a esm-module with styled-components
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```jsx
+import CardWithStyledComponents from 'https://jscdn.teleporthq.io/product-card_0fc4ab9e-f909-49ac-a96d-daf4947fc332.js'
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Styled Comonents don't need `DOM` unlike `css-modules`. And so, this should work without disabling `SSR`.
+But, NextJS and webpack throws a error. Which we can see from screenshot below.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+![image]('./error.png')
 
-## Learn More
+```
+Server Error
+TypeError: styled_components__WEBPACK_IMPORTED_MODULE_3__ is not a function
+```
 
-To learn more about Next.js, take a look at the following resources:
+But the same error can be worked around by disabling `SSR` for the same component.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```jsx
+const CardWithStyledComponentsNoSSR = dynamic(() => 
+  import('https://jscdn.teleporthq.io/product-card_0fc4ab9e-f909-49ac-a96d-daf4947fc332.js'), 
+{ ssr: false })
+```
